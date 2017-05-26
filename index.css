@@ -1,0 +1,64 @@
+body {
+  /*width: 90%;*/
+  margin: 0 auto;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+svg {
+/*  margin-top: 20px;*/
+}
+
+path.census {
+  fill: none;
+  stroke: #000000;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+path.census:hover {
+/*  opacity: 0.5;*/
+}
+
+path.neighborhood {
+  fill: white;
+  stroke: #000000;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+path.neighborhood:hover {
+  opacity: 0.5;
+}
+
+div.tract-tooltip {	
+    position: absolute;				
+    width: 250px;					
+    height: 35px;
+	padding-top: 10px;
+    font: 12px 'Roboto', sans-serif;
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+div.nbrhood-tooltip {	
+    position: absolute;				
+    width: 300px;					
+    height: 35px;
+	padding-top: 20px;
+    font: 12px 'Roboto', sans-serif;
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+/*
+.major_road { stroke: #776; }
+.minor_road { stroke: #ccb; }
+.highway { stroke: #f39; stroke-width: 1.5px; }
+.rail { stroke: #7de; }
+*/
+
