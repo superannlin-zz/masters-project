@@ -70,13 +70,14 @@ function drawMap(error, neighborhood, general, census, petitions) {
 	});
 	
 	// neighborhood
-//	svg.selectAll("census").data(general.features).enter().append("path")
-//		.attr("d", path)
-//		.attr("class","neighborhood")
-//		.attr('data-id', function(d) {return d.properties.nid;})
-//		.attr('data-name', function(d) {return d.properties.nbrhood;})
-////		.attr('population', function(d) {return nbrhood_data[d.properties.nbrhood] ? 	nbrhood_data[d.properties.nbrhood] : 0;})
-//		.style('fill-opacity',0);
+	svg.selectAll("census").data(general.features).enter().append("path")
+		.attr("d", path)
+		.attr("class","neighborhood")
+		.attr('data-id', function(d) {return d.properties.nid;})
+		.attr('data-name', function(d) {return d.properties.nbrhood;})
+//		.attr('population', function(d) {return nbrhood_data[d.properties.nbrhood] ? 	nbrhood_data[d.properties.nbrhood] : 0;})
+		.style('fill-opacity',0)
+		.style('visibility','hidden');
 
 //	$('svg path.neighborhood').on("mouseover", function() {
 //		//$("#details").text("Neighborhood: " + d3.select(this).attr('data-name') + ", " + "Population: " + d3.select(this).attr('population'));
@@ -94,6 +95,15 @@ function drawMap(error, neighborhood, general, census, petitions) {
 //            .style("opacity", 0);	
 //	});
 	
+//	var tract = true;
+//	var neighborhood = false;
+	
+//	d3.select("#nbrhood-button").on("click", function(){
+//		console.log('hi');
+//		d3.select("path.neighborhood").style('visibility','visible');
+//		d3.select("path.census").style('outline', 'none');
+//	});
+	
 	// plot rent petitions
 	var pts = [];
 	for (var key in petitions) {
@@ -102,7 +112,7 @@ function drawMap(error, neighborhood, general, census, petitions) {
 		if (!isNaN(projection([loc0,loc1])[0]) && !isNaN(projection([loc0,loc1])[1])) {
 			pts.push([loc0,loc1]);
 		}
-		if (pts.length == 100) {break;}
+		if (pts.length == 1000) {break;}
 	}
 
 	svg.selectAll("circle")
@@ -110,7 +120,7 @@ function drawMap(error, neighborhood, general, census, petitions) {
 		.append("circle")
 		.attr("cx", function (d) { console.log(projection(d)); return projection(d)[0]; })
 		.attr("cy", function (d) { return projection(d)[1]; })
-		.attr("r", "8px")
+		.attr("r", "2px")
 		.attr("fill", "red")
 	
 }	
