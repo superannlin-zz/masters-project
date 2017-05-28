@@ -106,21 +106,30 @@ function drawMap(error, neighborhood, general, census, petitions) {
 	
 	// plot rent petitions
 	var pts = [];
+	var colors = {'2010': 'white','2011': 'pink','2012':'purple','2013':'blue', '2014': 'green', '2015': 'yellow', '2016': 'orange', '2017': 'red'};
 	for (var key in petitions) {
 		var loc0 = parseFloat(petitions[key].Location0);
 		var loc1 = parseFloat(petitions[key].Location1);
-		if (!isNaN(projection([loc0,loc1])[0]) && !isNaN(projection([loc0,loc1])[1])) {
-			pts.push([loc0,loc1]);
+		var year = parseFloat(petitions[key].Year);
+		if (!isNaN(projection([loc0,loc1])[0]) && !isNaN(projection([loc0,loc1])[1]) && parseInt(year) >= 2010) {
+			pts.push([[loc0,loc1],year]);
 		}
-		if (pts.length == 1000) {break;}
+//		if (pts.length == 1000) {break;}
 	}
 
 	svg.selectAll("circle")
 		.data(pts).enter()
 		.append("circle")
-		.attr("cx", function (d) { console.log(projection(d)); return projection(d)[0]; })
-		.attr("cy", function (d) { return projection(d)[1]; })
+		.attr("cx", function (d) { return projection(d[0])[0]; })
+		.attr("cy", function (d) { return projection(d[0])[1]; })
 		.attr("r", "2px")
-		.attr("fill", "red")
+		.attr("fill", function (d) { return colors[d[1]]; })
+		.attr("year", function (d) { return d[1]; })
+	
+	d3.select(".circle").on("mouseover", function(){
+		console.log(d3.select(this).attr('year'));
+	});
+//	d3.select(".circle").on("mouseout", function(){
+//	});
 	
 }	
