@@ -5,11 +5,12 @@ d3.queue()
   .defer(d3.csv, "petitions-capital-improvement.csv")
   .defer(d3.csv, "petitions-unlawful-rent-increase.csv")
   .defer(d3.csv, "stopsoutput.csv")
+  .defer(d3.csv, "listings-cleaned.csv")
   .await(drawMap);
 
-function drawMap(error, neighborhood, general, census, petitions_tenant, petitions_renter, stops) {
+function drawMap(error, neighborhood, general, census, petitions_tenant, petitions_renter, stops, listings) {
 	if (error) throw error;
-	var width = 550, height = 550;
+	var width = 700, height = 550;
 	
 	// Define the div for the tooltip
 	var tract = d3.select("body").append("div")	
@@ -20,12 +21,17 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		.attr("class","bus-tooltip")
 		.style("opacity", 0);
 	
+	var airbnb_tip = d3.select("body").append("div")
+		.attr("class","airbnb-tooltip")
+		.style("opacity", 0);
+	
 	var svg = d3.select("body").append("svg")
 		.attr("width", width)
 		.attr("height", height)
 		.append("g");
 
 	var g = svg.append("g");
+	var g2 = svg.append("g");
 	
 	// Define bounds for map
 	var projection = d3.geo.mercator().scale(1).translate([0, 0]).precision(0);
@@ -73,14 +79,74 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
         	.duration(200)		
             .style("opacity", .9);
 		tract.html("Neighborhood: " + d3.select(this).attr('data-name') + "<br>" + "Population: " + d3.select(this).attr('population'))
-			.style("left", ($(this).position().left) + "px")		
-            .style("top", ($(this).position().top - 28) + "px");
+			.style("left", ($(this).position().left + 17) + "px")		
+            .style("top", ($(this).position().top - 45) + "px");
 	});
 	
 	$('svg path.census').on("mouseout", function(){
 		tract.transition()		
             .duration(500)		
             .style("opacity", 0);	
+	});
+	
+		//  plot Airbnb listings
+	var pts = [];
+	for (var key in listings) {
+		var loc0 = parseFloat(listings[key].longitude);
+		var loc1 = parseFloat(listings[key].latitude);
+		var year = (listings[key].last_review_year);
+		var roomtype = listings[key].room_type;
+		var price = listings[key].price;
+		if (!isNaN(projection([loc0,loc1])[0]) && !isNaN(projection([loc0,loc1])[1])) {
+			pts.push([[loc0,loc1],year,roomtype,price]);
+		}
+	}
+
+//	g.selectAll("circle")
+//		.data(pts).enter()
+//		.append("circle")
+//		.attr("cx", function (d) { return projection(d[0])[0]; })
+//		.attr("cy", function (d) { return projection(d[0])[1]; })
+//		.attr("r", "2px")
+//		.attr("fill", "black")
+//		.attr("stop", function(d) { console.log(d[1]); return d[1]; })
+//		.attr("visibility","visible");
+	
+	g.selectAll("text")
+		.data(pts).enter()
+		.append("text")
+		.attr("class", function(d) {return "airbnb listing"+d[1];})
+		.attr("z-index","1")
+//		.attr("class", function(d) {return "listing"+d[1];})
+		.attr("x", function (d) { return projection(d[0])[0]; })
+		.attr("y", function (d) { return projection(d[0])[1]; })
+		.attr("year", function (d) {return d[1]})
+		.attr("roomtype", function (d) {return d[2]})
+		.attr("price", function (d) {return d[3]})
+		.attr("dx","-.2em")
+		.attr("dy", ".55em")
+		.attr("style","font-family:FontAwesome")
+		.attr("fill","#fd5c63")
+		.attr("font-size","10px")
+		.attr("opacity","0.5")
+		.text(function(d) {return '\uf015'})
+		.attr("visibility","hidden");
+
+	$('.airbnb').on("mouseover", function() {
+		airbnb_tip.transition()		
+        	.duration(200)		
+            .style("opacity", 0.9);
+		$(this).attr("opacity","1");
+		airbnb_tip.html("AirBnB Listing: <br>" + d3.select(this).attr('roomtype') +" for $"+d3.select(this).attr('price')+" per night")
+			.style("left", ($(this).position().left + 17) + "px")		
+            .style("top", ($(this).position().top - 45) + "px");
+	});
+	
+	$('.airbnb').on("mouseout", function(){
+		airbnb_tip.transition()		
+            .duration(500)		
+            .style("opacity", 0);	
+		$(this).attr("opacity","0.5");
 	});
 	
 	// Draw rent petitions
@@ -98,6 +164,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 	g.selectAll("circle")
 		.data(pts).enter()
 		.append("circle")
+		.attr("z-index","0")
 		.attr("class", function(d) {return "tenantyear"+d[1];})
 		.attr("cx", function (d) { return projection(d[0])[0]; })
 		.attr("cy", function (d) { return projection(d[0])[1]; })
@@ -121,6 +188,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 	g.selectAll("circle")
 		.data(pts).enter()
 		.append("circle")
+		.attr("z-index","0")
 		.attr("class", function(d) {return "renteryear"+d[1];})
 		.attr("cx", function (d) { return projection(d[0])[0]; })
 		.attr("cy", function (d) { return projection(d[0])[1]; })
@@ -130,57 +198,6 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 	//		.attr("fill", function (d) { return colors[d[1]]; })
 		.attr("year", function (d) { return d[1]; })
 		.attr("visibility","hidden");
-	
-	var buttons = d3.select("body").append("div");
-	var years = ["2010","2011","2012","2013","2014","2015","2016","2017"]
-	
-	buttons.append("button").text("2010").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2010").attr("visibility","visible");	
-		g.selectAll(".renteryear2010").attr("visibility","visible");	
-	});
-	
-	buttons.append("button").text("2011").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2011").attr("visibility","visible");	
-		g.selectAll(".renteryear2011").attr("visibility","visible");	
-	});
-	
-	buttons.append("button").text("2012").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2012").attr("visibility","visible");	
-		g.selectAll(".renteryear2012").attr("visibility","visible");	
-	});
-	
-	buttons.append("button").text("2013").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2013").attr("visibility","visible");	
-		g.selectAll(".renteryear2013").attr("visibility","visible");	
-	});
-	
-	buttons.append("button").text("2014").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2014").attr("visibility","visible");	
-		g.selectAll(".renteryear2014").attr("visibility","visible");	
-	});
-	
-	buttons.append("button").text("2015").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2015").attr("visibility","visible");	
-		g.selectAll(".renteryear2015").attr("visibility","visible");	
-	});
-	
-	buttons.append("button").text("2016").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2016").attr("visibility","visible");	
-		g.selectAll(".renteryear2016").attr("visibility","visible");	
-	});
-	
-	buttons.append("button").text("2017").on("click", function(){
-		g.selectAll("circle").attr("visibility","hidden");
-		g.selectAll(".tenantyear2017").attr("visibility","visible");	
-		g.selectAll(".renteryear2017").attr("visibility","visible");	
-	});
 	
 //  plot bus stops
 	var pts = [];
@@ -193,19 +210,17 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		}
 	}
 
-//	g.selectAll("rect")
+//	g.selectAll("circle")
 //		.data(pts).enter()
-//		.append("rect")
-//		.attr("x", function (d) { return projection(d[0])[0]; })
-//		.attr("y", function (d) { return projection(d[0])[1]; })
-//		.attr("width", "4px")
-//		.attr("height", "4px")
+//		.append("circle")
+//		.attr("cx", function (d) { return projection(d[0])[0]; })
+//		.attr("cy", function (d) { return projection(d[0])[1]; })
+//		.attr("r", "2px")
 //		.attr("fill", "black")
-//		.attr("stroke","black")
 //		.attr("stop", function(d) { console.log(d[1]); return d[1]; })
 //		.attr("visibility","visible");
 	
-	g.selectAll("text")
+	g2.selectAll("text")
 		.data(pts).enter()
 		.append("text")
 		.attr("class","bus")
@@ -223,9 +238,9 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		bus_tip.transition()		
         	.duration(200)		
             .style("opacity", .9);
-		bus_tip.html("Shuttle Stop: <br>" + d3.select(this).attr('data-name'))
-			.style("left", ($(this).position().left) + "px")		
-            .style("top", ($(this).position().top - 28) + "px");
+		bus_tip.html("Shuttle Stop: <br>" + d3.select(this).attr('data-name').split('&')[0]+" & "+d3.select(this).attr('data-name').split('&')[1])
+			.style("left", ($(this).position().left + 17) + "px")		
+            .style("top", ($(this).position().top - 45) + "px");
 	});
 	
 	$('.bus').on("mouseout", function(){
@@ -234,9 +249,86 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
             .style("opacity", 0);	
 	});
 	
+	// buttons to toggle data view
+	var buttons = d3.select("body").append("div");
+	var years = ["2010","2011","2012","2013","2014","2015","2016","2017"]
+	
+	buttons.append("button").text("2010").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2010").attr("visibility","visible");	
+		g.selectAll(".renteryear2010").attr("visibility","visible");	
+		g.selectAll(".listing2010").attr("visibility","visible");	
+	});
+	
+	buttons.append("button").text("2011").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2011").attr("visibility","visible");	
+		g.selectAll(".renteryear2011").attr("visibility","visible");
+		g.selectAll(".listing2011").attr("visibility","visible");	
+	});
+	
+	buttons.append("button").text("2012").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2012").attr("visibility","visible");	
+		g.selectAll(".renteryear2012").attr("visibility","visible");
+		g.selectAll(".listing2012").attr("visibility","visible");	
+	});
+	
+	buttons.append("button").text("2013").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2013").attr("visibility","visible");	
+		g.selectAll(".renteryear2013").attr("visibility","visible");
+		g.selectAll(".listing2013").attr("visibility","visible");	
+	});
+	
+	buttons.append("button").text("2014").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2014").attr("visibility","visible");	
+		g.selectAll(".renteryear2014").attr("visibility","visible");
+		g.selectAll(".listing2014").attr("visibility","visible");	
+	});
+	
+	buttons.append("button").text("2015").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2015").attr("visibility","visible");	
+		g.selectAll(".renteryear2015").attr("visibility","visible");
+		g.selectAll(".listing2015").attr("visibility","visible");	
+	});
+	
+	buttons.append("button").text("2016").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2016").attr("visibility","visible");	
+		g.selectAll(".renteryear2016").attr("visibility","visible");
+		g.selectAll(".listing2016").attr("visibility","visible");	
+	});
+	
+	buttons.append("button").text("2017").on("click", function(){
+		g.selectAll("circle").attr("visibility","hidden");
+		g.selectAll(".airbnb").attr("visibility","hidden");
+		
+		g.selectAll(".tenantyear2017").attr("visibility","visible");	
+		g.selectAll(".renteryear2017").attr("visibility","visible");
+		g.selectAll(".listing2017").attr("visibility","visible");	
+	});
+	
 	function zoomed() {
 		console.log("zooming");
   		g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  		g2.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 	}
 	
 	d3.select(self.frameElement).style("height", height + "px");
