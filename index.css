@@ -55,6 +55,17 @@ div.nbrhood-tooltip {
     pointer-events: none;			
 }
 
+.bus-tooltip {
+	position: absolute;				
+    width: 200px;					
+    height: 35px;
+	padding-top: 15px;
+    font: 12px 'Roboto', sans-serif;
+    background: snow;	
+    border: 0px;
+    pointer-events: none;
+}
+
 circle:hover {
 	
 }

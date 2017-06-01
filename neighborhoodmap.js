@@ -16,6 +16,10 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		.attr("class", "tract-tooltip")				
 		.style("opacity", 0);
 
+	var bus_tip = d3.select("body").append("div")
+		.attr("class","bus-tooltip")
+		.style("opacity", 0);
+	
 	var svg = d3.select("body").append("svg")
 		.attr("width", width)
 		.attr("height", height)
@@ -204,15 +208,32 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 	g.selectAll("text")
 		.data(pts).enter()
 		.append("text")
-		  .attr("x", function (d) { return projection(d[0])[0]; })
-		  .attr("y", function (d) { return projection(d[0])[1]; })
-		  .attr("style","font-family:FontAwesome")
-		  .attr("fill","white")
-		  .attr("font-size","10px")
-		  .attr("dx","-.2em")
-		  .attr("dy", ".55em")
-		  .text(function(d) {return '\uf207'});
+		.attr("class","bus")
+		.attr("x", function (d) { return projection(d[0])[0]; })
+		.attr("y", function (d) { return projection(d[0])[1]; })
+		.attr("data-name", function (d) {return d[1]})
+		.attr("style","font-family:FontAwesome")
+		.attr("fill","white")
+		.attr("font-size","10px")
+		.attr("dx","-.2em")
+		.attr("dy", ".55em")
+		.text(function(d) {return '\uf207'});
 
+	$('.bus').on("mouseover", function() {
+		bus_tip.transition()		
+        	.duration(200)		
+            .style("opacity", .9);
+		bus_tip.html("Shuttle Stop: <br>" + d3.select(this).attr('data-name'))
+			.style("left", ($(this).position().left) + "px")		
+            .style("top", ($(this).position().top - 28) + "px");
+	});
+	
+	$('.bus').on("mouseout", function(){
+		bus_tip.transition()		
+            .duration(500)		
+            .style("opacity", 0);	
+	});
+	
 	function zoomed() {
 		console.log("zooming");
   		g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
