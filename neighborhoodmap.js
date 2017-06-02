@@ -83,13 +83,15 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
             .style("top", ($(this).position().top - 45) + "px");
 	});
 	
+	// TODO count petitions and airbnb listings per tract using: https://github.com/d3/d3-polygon
+	
 	$('svg path.census').on("mouseout", function(){
 		tract.transition()		
             .duration(500)		
             .style("opacity", 0);	
 	});
 	
-		//  plot Airbnb listings
+	//  plot Airbnb listings
 	var pts = [];
 	for (var key in listings) {
 		var loc0 = parseFloat(listings[key].longitude);
@@ -129,7 +131,14 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		.attr("fill","#fd5c63")
 		.attr("font-size","10px")
 		.attr("opacity","0.5")
-		.text(function(d) {return '\uf015'})
+		.text(function(d) {
+			if (d[2] == "Private room") {
+				return '\uf236';
+			}
+			else {
+				return '\uf015';
+			}
+		})
 		.attr("visibility","hidden");
 
 	$('.airbnb').on("mouseover", function() {
@@ -251,7 +260,6 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 	
 	// buttons to toggle data view
 	var buttons = d3.select("body").append("div");
-	var years = ["2010","2011","2012","2013","2014","2015","2016","2017"]
 	
 	buttons.append("button").text("2010").on("click", function(){
 		g.selectAll("circle").attr("visibility","hidden");
@@ -334,11 +342,6 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 	d3.select(self.frameElement).style("height", height + "px");
 	
 }
-
-	
-
-	
-	
 
 	// neighborhood
 //var nbrhood = d3.select("body").append("div")	
