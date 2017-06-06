@@ -8,7 +8,7 @@ d3.queue()
   .defer(d3.csv, "listings-cleaned.csv")
   .await(drawMap);
 
-function drawMap(error, neighborhood, general, census, petitions_tenant, petitions_renter, stops, listings) {
+function drawMap(error, neighborhood, general, census, petitions_landlord, petitions_renter, stops, listings) {
 	if (error) throw error;
 	var width = 700, height = 550;
 	
@@ -82,6 +82,11 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 			.style("left", ($(this).position().left + 17) + "px")		
             .style("top", ($(this).position().top - 45) + "px");
 	});
+	
+	// TODO legend for different data types
+	// TODO description of findings after webpage header
+	// TODO highlight different years of data
+	// TODO list data sources and tools at bottom of page
 	
 	// TODO count petitions and airbnb listings per tract using: https://github.com/d3/d3-polygon
 	
@@ -160,10 +165,10 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 	
 	// Draw rent petitions
 	var pts = [];
-	for (var key in petitions_tenant) {
-		var loc0 = parseFloat(petitions_tenant[key].Location0);
-		var loc1 = parseFloat(petitions_tenant[key].Location1);
-		var year = parseFloat(petitions_tenant[key].Year);
+	for (var key in petitions_landlord) {
+		var loc0 = parseFloat(petitions_landlord[key].Location0);
+		var loc1 = parseFloat(petitions_landlord[key].Location1);
+		var year = parseFloat(petitions_landlord[key].Year);
 		
 		if (!isNaN(projection([loc0,loc1])[0]) && !isNaN(projection([loc0,loc1])[1]) && parseInt(year) >= 2010) {
 			pts.push([[loc0,loc1],year]);
@@ -174,7 +179,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		.data(pts).enter()
 		.append("circle")
 		.attr("z-index","0")
-		.attr("class", function(d) {return "tenantyear"+d[1];})
+		.attr("class", function(d) {return "landlordyear"+d[1];})
 		.attr("cx", function (d) { return projection(d[0])[0]; })
 		.attr("cy", function (d) { return projection(d[0])[1]; })
 		.attr("r", "2px")
@@ -183,6 +188,21 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 //		.attr("fill", function (d) { return colors[d[1]]; })
 		.attr("year", function (d) { return d[1]; })
 		.attr("visibility","hidden");
+	
+//	g2.selectAll("text")
+//		.data(pts).enter()
+//		.append("text")
+//		.attr("z-index","0")
+//		.attr("class", function(d) {return "landlordyear"+d[1];})
+//		.attr("x", function (d) { return projection(d[0])[0]; })
+//		.attr("y", function (d) { return projection(d[0])[1]; })
+//		.attr("data-name", function (d) {return d[1]})
+//		.attr("fill","red")
+//		.attr("font-size","10px")
+//		.attr("dx","-.2em")
+//		.attr("dy", ".55em")
+//		.text("L")
+//		.attr("visibility","visible");
 	
 	for (var key in petitions_renter) {
 		var loc0 = parseFloat(petitions_renter[key].Location0);
@@ -265,7 +285,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2010").attr("visibility","visible");	
+		g.selectAll(".landlordyear2010").attr("visibility","visible");	
 		g.selectAll(".renteryear2010").attr("visibility","visible");	
 		g.selectAll(".listing2010").attr("visibility","visible");	
 	});
@@ -274,7 +294,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2011").attr("visibility","visible");	
+		g.selectAll(".landlordyear2011").attr("visibility","visible");	
 		g.selectAll(".renteryear2011").attr("visibility","visible");
 		g.selectAll(".listing2011").attr("visibility","visible");	
 	});
@@ -283,7 +303,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2012").attr("visibility","visible");	
+		g.selectAll(".landlordyear2012").attr("visibility","visible");	
 		g.selectAll(".renteryear2012").attr("visibility","visible");
 		g.selectAll(".listing2012").attr("visibility","visible");	
 	});
@@ -292,7 +312,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2013").attr("visibility","visible");	
+		g.selectAll(".landlordyear2013").attr("visibility","visible");	
 		g.selectAll(".renteryear2013").attr("visibility","visible");
 		g.selectAll(".listing2013").attr("visibility","visible");	
 	});
@@ -301,7 +321,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2014").attr("visibility","visible");	
+		g.selectAll(".landlordyear2014").attr("visibility","visible");	
 		g.selectAll(".renteryear2014").attr("visibility","visible");
 		g.selectAll(".listing2014").attr("visibility","visible");	
 	});
@@ -310,7 +330,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2015").attr("visibility","visible");	
+		g.selectAll(".landlordyear2015").attr("visibility","visible");	
 		g.selectAll(".renteryear2015").attr("visibility","visible");
 		g.selectAll(".listing2015").attr("visibility","visible");	
 	});
@@ -319,7 +339,7 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2016").attr("visibility","visible");	
+		g.selectAll(".landlordyear2016").attr("visibility","visible");	
 		g.selectAll(".renteryear2016").attr("visibility","visible");
 		g.selectAll(".listing2016").attr("visibility","visible");	
 	});
@@ -328,16 +348,28 @@ function drawMap(error, neighborhood, general, census, petitions_tenant, petitio
 		g.selectAll("circle").attr("visibility","hidden");
 		g.selectAll(".airbnb").attr("visibility","hidden");
 		
-		g.selectAll(".tenantyear2017").attr("visibility","visible");	
+		g.selectAll(".landlordyear2017").attr("visibility","visible");	
 		g.selectAll(".renteryear2017").attr("visibility","visible");
 		g.selectAll(".listing2017").attr("visibility","visible");	
 	});
 	
+//	var reset = d3.select("body").append("div");
+//	reset.append("button").text("Reset View").on("click", function(){
+//		g.attr("transform", "translate("+[0, 0]+")scale(1)");
+//  		g2.attr("transform", "translate("+[0, 0]+")scale(1)");									
+//	});
+	
 	function zoomed() {
-		console.log("zooming");
   		g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   		g2.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 	}
+	
+	$("button").click(function(){
+		$("button").each(function(){
+			$(this).removeClass('clicked');
+		});
+		$(this).toggleClass('clicked');
+	});
 	
 	d3.select(self.frameElement).style("height", height + "px");
 	
