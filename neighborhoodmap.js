@@ -181,7 +181,7 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 		.attr("cx", function (d) { return projection(d[0])[0]; })
 		.attr("cy", function (d) { return projection(d[0])[1]; })
 		.attr("r", "2px")
-		.attr("fill", "#F81B84")
+		.attr("fill", "#f81b84")
 		.attr("stroke", "black")
 //		.attr("fill", function (d) { return colors[d[1]]; })
 		.attr("year", function (d) { return d[1]; })
