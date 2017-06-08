@@ -347,12 +347,12 @@ function drawMap(error, neighborhood, census, petitions_landlord, petitions_rent
 	divcode.append("div")
 		.html("<ul><li><a href='https://codepen.io/JFarrow/details/ubcqw'>A Neighborhood Map of San Francisco</a></li><li><a href='http://bl.ocks.org/karmadude/5820393'>San Francisco Contours</a></li><li><a href='https://github.com/thfield/sf-census'>SF-Census Map</a></li></ul>");
 	
-	var divref = resources.append("div")
-		.attr("class","resources");
-	divref.append("h4")
-		.text("References");
-	divref.append("div")
-		.html("<ul><li>index.html</li><li>index.css</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li></ul>");
+//	var divref = resources.append("div")
+//		.attr("class","resources");
+//	divref.append("h4")
+//		.text("References");
+//	divref.append("div")
+//		.html("<ul><li>index.html</li><li>index.css</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li></ul>");
 	
 //	var reset = d3.select("body").append("div");
 //	reset.append("button").text("Reset View").on("click", function(){
