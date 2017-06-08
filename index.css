@@ -109,7 +109,6 @@ svg {
 
 legend + * {
   -webkit-margin-top-collapse: separate;
-  margin-top: 10px;
 }
 
 /*
