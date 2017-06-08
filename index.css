@@ -90,6 +90,7 @@ button:focus {
 svg {
 	display: inline-block;
 	margin-right: 350px;
+	-webkit-margin-collapse: separate;
 }
 
 .legend {
