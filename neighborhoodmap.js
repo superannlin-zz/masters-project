@@ -85,9 +85,7 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 	
 	// TODO legend for different data types
 	// TODO description of findings after webpage header
-	// TODO highlight different years of data
 	// TODO list data sources and tools at bottom of page
-	
 	// TODO count petitions and airbnb listings per tract using: https://github.com/d3/d3-polygon
 	
 	$('svg path.census').on("mouseout", function(){
@@ -238,16 +236,6 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 			pts.push([[loc0,loc1],stop]);
 		}
 	}
-
-//	g.selectAll("circle")
-//		.data(pts).enter()
-//		.append("circle")
-//		.attr("cx", function (d) { return projection(d[0])[0]; })
-//		.attr("cy", function (d) { return projection(d[0])[1]; })
-//		.attr("r", "2px")
-//		.attr("fill", "black")
-//		.attr("stop", function(d) { console.log(d[1]); return d[1]; })
-//		.attr("visibility","visible");
 	
 	g2.selectAll("text")
 		.data(pts).enter()
@@ -279,7 +267,7 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 	});
 	
 	// buttons to toggle data view
-	var buttons = d3.select("body").append("div");
+	var buttons = d3.select("body").append("div").style("margin-top", "5px");
 	
 	buttons.append("button").text("2010").on("click", function(){
 		g.selectAll("circle").attr("visibility","hidden");
@@ -352,6 +340,12 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 		g.selectAll(".renteryear2017").attr("visibility","visible");
 		g.selectAll(".listing2017").attr("visibility","visible");	
 	});
+	
+//	var sources = d3.select("body").append("div")
+//		.attr("class","sources");
+//	sources.text("Resources");
+//	var stuff = sources.append("p");
+//	stuff.text("Files, Data Sources, Code Sources, References");
 	
 //	var reset = d3.select("body").append("div");
 //	reset.append("button").text("Reset View").on("click", function(){

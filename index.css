@@ -87,6 +87,24 @@ button:focus {
 	background:#FF0;
 }
 
+svg {
+	display: inline-block;
+	margin-right: 350px;
+}
+
+.legend {
+	display: inline-block; 
+	position : absolute;
+/*	border-radius:0.3em;*/
+	right:150px; 
+/*	width:300px;*/
+/*	height:250px;*/
+/*	border:1px solid #000;*/
+}
+
+.sources {
+	margin-top:30px;
+}
 
 /*
 .major_road { stroke: #776; }
