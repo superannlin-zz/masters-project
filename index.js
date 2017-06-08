@@ -1,6 +1,5 @@
 d3.queue()
   .defer(d3.json, "data/neighborhood.json")
-  .defer(d3.json, "data/neighborhood-general.json")
   .defer(d3.csv, "data/census.csv")
   .defer(d3.csv, "data/petitions-capital-improvement.csv")
   .defer(d3.csv, "data/petitions-unlawful-rent-increase.csv")
@@ -8,9 +7,9 @@ d3.queue()
   .defer(d3.csv, "data/listings-cleaned.csv")
   .await(drawMap);
 
-function drawMap(error, neighborhood, general, census, petitions_landlord, petitions_renter, stops, listings) {
+function drawMap(error, neighborhood, census, petitions_landlord, petitions_renter, stops, listings) {
 	if (error) throw error;
-	var width = 600, height = 450;
+	var width = 550, height = 450;
 	
 	// Define the div for the tooltip
 	var tract = d3.select("body").append("div")	
@@ -36,7 +35,7 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 	// Define bounds for map
 	var projection = d3.geo.mercator().scale(1).translate([0, 0]).precision(0);
 	var path = d3.geo.path().projection(projection);
-	var bounds = path.bounds(general);
+	var bounds = path.bounds(neighborhood);
 	
 	var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
@@ -147,9 +146,8 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 	$('.airbnb').on("mouseout", function(){
 		airbnb_tip.transition()		
             .duration(500)		
-            .style("opacity", "0.9");	
+            .style("opacity", 0);	
 		$(this).attr("opacity","0.5");
-		$(this).attr("z-index","0");
 	});
 	
 	// Draw rent petitions
@@ -244,7 +242,7 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 	});
 	
 	// buttons to toggle data view
-	var buttons = d3.select("body").append("div").style("margin-top", "5px");
+	var buttons = d3.select("body").append("div").style("margin-top", "20px");
 	
 	buttons.append("button").text("2010").on("click", function(){
 		g.selectAll("circle").attr("visibility","hidden");
@@ -320,10 +318,12 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 	
 	d3.select("body").append("hr");
 	
+	d3.select("body").append("h3").text("Resources")
+		.attr("margin-top","50px");
+	
 	var sources = d3.select("body").append("div")
 		.attr("class","sources");
-	sources.append("h3").text("Resources")
-		.attr("margin-top","50px");
+	
 	var resources = sources.append("p");
 	
 	var divfiles = resources.append("div")
@@ -331,28 +331,28 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 	divfiles.append("h4")
 		.text("Files");
 	divfiles.append("div")
-		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
+		.html("<ul><li>index.html</li><li>index.css</li><li>index.js</li><li>data/census.csv</li><li>data/listings-cleaned.csv</li><li>data/neighborhood.json</li><li>data/petitions-capital-improvement.csv</li><li>data/petitions-unlawful-rent-increase.csv</li><li>data/stopsoutput.csv</li></ul>");
 	
 	var divdata = resources.append("div")
 		.attr("class","resources");
 	divdata.append("h4")
 		.text("Data Sources");
 	divdata.append("div")
-		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
+		.html("<ul><li><a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a></li><li><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a></li><li><a href='https://factfinder.census.gov/faces/tableservices/jsf/pages/productview.xhtml?src=CF'>San Francisco 2010 Census Tract Populations</a></li><li><a href='https://data.sfgov.org/Geographic-Locations-and-Boundaries/Analysis-Neighborhoods-2010-census-tracts-assigned/bwbp-wk3r'>San Francisco 2010 Census Tracts</a></li><li><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a></li><ul>");
 	
 	var divcode = resources.append("div")
 		.attr("class","resources");
 	divcode.append("h4")
 		.text("Code Sources");
 	divcode.append("div")
-		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
+		.html("<ul><li><a href='https://codepen.io/JFarrow/details/ubcqw'>A Neighborhood Map of San Francisco</a></li><li><a href='http://bl.ocks.org/karmadude/5820393'>San Francisco Contours</a></li><li><a href='https://github.com/thfield/sf-census'>SF-Census Map</a></li></ul>");
 	
 	var divref = resources.append("div")
 		.attr("class","resources");
 	divref.append("h4")
 		.text("References");
 	divref.append("div")
-		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
+		.html("<ul><li>index.html</li><li>index.css</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li><li>index.js</li></ul>");
 	
 //	var reset = d3.select("body").append("div");
 //	reset.append("button").text("Reset View").on("click", function(){
