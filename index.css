@@ -13,9 +13,16 @@ svg {
 }
 
 h4 {
-	display: inline-block;
+/*	display: inline-block;*/
 	margin-left: 50px;
 	margin-right: 50px;
+}
+
+hr { 
+	width:75%; 
+	height:1px;
+	margin-top: 75px;
+	background: black; 
 }
 
 /*mapping*/
@@ -110,6 +117,11 @@ button:focus {
 .sources {
 	padding-top:100px;
 	height:100vh;
+}
+
+.resources {
+	display: inline-block;
+	padding: 10px;
 }
 
 fieldset { 

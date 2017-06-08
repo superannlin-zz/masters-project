@@ -318,24 +318,41 @@ function drawMap(error, neighborhood, general, census, petitions_landlord, petit
 		g.selectAll(".listing2017").attr("visibility","visible");	
 	});
 	
+	d3.select("body").append("hr");
+	
 	var sources = d3.select("body").append("div")
 		.attr("class","sources");
 	sources.append("h3").text("Resources")
 		.attr("margin-top","50px");
 	var resources = sources.append("p");
-	resources.append("h4").text("Files");
-	var datasources = resources.append("h4")
+	
+	var divfiles = resources.append("div")
+		.attr("class","resources");
+	divfiles.append("h4")
+		.text("Files");
+	divfiles.append("div")
+		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
+	
+	var divdata = resources.append("div")
+		.attr("class","resources");
+	divdata.append("h4")
 		.text("Data Sources");
-	datasources.append("a")
-		.text("hi")
-		.attr("xlink:href","http://www.bayareacensus.ca.gov/transportation.htm");
-//	http://www.bayareacensus.ca.gov/transportation.htm
-//  	https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq
-//  	https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017
-//	http://insideairbnb.com/san-francisco/
-//	http://www.antievictionmap.com
-	resources.append("h4").text("Code Sources");
-	resources.append("h4").text("References");
+	divdata.append("div")
+		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
+	
+	var divcode = resources.append("div")
+		.attr("class","resources");
+	divcode.append("h4")
+		.text("Code Sources");
+	divcode.append("div")
+		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
+	
+	var divref = resources.append("div")
+		.attr("class","resources");
+	divref.append("h4")
+		.text("References");
+	divref.append("div")
+		.html("<a href='http://insideairbnb.com/san-francisco/'>Inside AirBnB</a><br><a href='https://data.sfgov.org/Housing-and-Buildings/Petitions-to-the-Rent-Board/6swy-cmkq'>Petitions to the Rent Board</a><br><a href='https://www.sfmta.com/projects-planning/projects/commuter-shuttle-program-2016-2017'>SFMTA Commuter Shuttle Program</a>");
 	
 //	var reset = d3.select("body").append("div");
 //	reset.append("button").text("Reset View").on("click", function(){
