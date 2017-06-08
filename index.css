@@ -6,18 +6,24 @@ body {
 }
 
 svg {
-   
+	display: inline-block;
+	margin-right: 350px;
+	margin-top: 10px;
+	-webkit-margin-collapse: separate;
 }
 
+h4 {
+	display: inline-block;
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+/*mapping*/
 path.census {
   fill: none;
   stroke: #000000;
   stroke-linejoin: round;
   stroke-linecap: round;
-}
-
-path.census:hover {
-/*  opacity: 0.5;*/
 }
 
 path.neighborhood {
@@ -31,6 +37,7 @@ path.neighborhood:hover {
   opacity: 0.5;
 }
 
+/*tooltips*/
 div.tract-tooltip, div.bus-tooltip, div.airbnb-tooltip {	
     position: absolute;				
     width: 250px;					
@@ -68,6 +75,7 @@ div.airbnb-tooltip {
 	opacity: 0.3;
 }
 
+/*data points*/
 .bus {
 	visibility: visible;
 }
@@ -87,40 +95,24 @@ button:focus {
 	background:#FF0;
 }
 
-svg {
-	display: inline-block;
-	margin-right: 350px;
-	-webkit-margin-collapse: separate;
-}
-
+/*other*/
 .legend {
 	display: inline-block; 
-	position : absolute;
-/*	border-radius:0.3em;*/
-	right:150px; 
-/*	width:300px;*/
-/*	height:250px;*/
-/*	border:1px solid #000;*/
+	position: absolute;
+	left:60%; 
+}
+
+.icon-outline {
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: black;
 }
 
 .sources {
-	margin-top:30px;
+	padding-top:100px;
+	height:100vh;
 }
-
-/*
-legend + * {
-  -webkit-margin-top-collapse: separate;
-}
-*/
 
 fieldset { 
-	padding: 10px 20px; 
+	padding: 10px 20px;
+	border-radius:0.3em;
 }
-
-/*
-.major_road { stroke: #776; }
-.minor_road { stroke: #ccb; }
-.highway { stroke: #f39; stroke-width: 1.5px; }
-.rail { stroke: #7de; }
-*/
-
